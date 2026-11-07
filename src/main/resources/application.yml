@@ -1,0 +1,166 @@
+server:
+  port: 8082
+
+# 每次 LLM 调用的结构化控制台日志（需 @EnableLlmConversationLogging；关闭: enabled: false）
+app:
+  llm:
+    conversation-log:
+      enabled: true
+      max-message-chars: 20000
+
+# 请求和响应日志配置
+langchain4j:
+  open-ai:
+    chat-model:
+      log-requests: true
+      log-responses: true
+  community:
+    dashscope:
+      chat-model:
+        api-key: ${DASHSCOPE_API_KEY:}
+        model-name: qwen3.8-27b
+        log-requests: true
+        log-responses: true
+      embedding-model:
+        api-key: ${DASHSCOPE_API_KEY:}
+        model-name: qwen3.7-text-embedding-flash  # 输出 1024 维，与 Milvus 集合维度一致
+        log-requests: true
+        log-responses: true
+      streaming-chat-model:
+        api-key: ${DASHSCOPE_API_KEY:}
+        model-name: qwen3.8-27b
+        log-requests: true
+        log-responses: true
+      image-model:
+        api-key: ${DASHSCOPE_API_KEY:}
+        model-name: qwen3.8-27b
+        log-requests: true
+        log-responses: true
+      image-generation-model:
+        api-key: ${DASHSCOPE_API_KEY:}
+        model-name: qwen-image-3.0
+        log-requests: true
+        log-responses: true
+      speech-recognition:
+        api-key: ${DASHSCOPE_API_KEY:}
+        endpoint: nls-meta.cn-shanghai.aliyuncs.com
+        app-key: ${ALIYUN_SPEECH_APP_KEY:}
+aliyun:
+  speech:
+    access-key-id: ${ALIYUN_ACCESS_KEY_ID:}
+    access-key-secret: ${ALIYUN_ACCESS_KEY_SECRET:}
+    app-key: ${ALIYUN_SPEECH_APP_KEY:}
+    region: ${ALIYUN_SPEECH_REGION:cn-shanghai}
+
+
+
+# 基本数据源配置
+spring:
+  config:
+    # 本地私有配置（真实密钥、本机地址），已被 .gitignore 忽略；文件不存在时静默跳过
+    import: optional:file:./application-local.yml
+  main:
+    allow-bean-definition-overriding: true  # 允许Bean覆盖（解决LangChain4j自动配置冲突）
+  autoconfigure:
+    exclude:
+      - dev.langchain4j.community.dashscope.spring.DashScopeAutoConfiguration  # 禁用DashScope自动配置
+  datasource:
+    url: "${MYSQL_URL:jdbc:mysql://localhost:3306/LLM?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=false}"
+    username: ${MYSQL_USERNAME:root}
+    password: ${MYSQL_PASSWORD:123456}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+  # Spring Boot 3 的 Redis 配置位置是 spring.data.redis（原 spring.redis 已废弃）
+  data:
+    redis:
+      host: ${REDIS_HOST:127.0.0.1}
+      port: ${REDIS_PORT:6379}
+      database: 0
+# MyBatis-Plus 配置
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+# 日志级别配置
+logging:
+  level:
+    # 尝试将 openai4j 的日志级别调至 TRACE，这通常会打印出 JSON 响应体
+    dev.ai4j.openai4j: TRACE
+    # 确保 LangChain4j 核心包也是 DEBUG 或 TRACE
+    dev.langchain4j: TRACE
+
+
+mcp:
+  zhipu:
+    api-key: ${ZHIPU_API_KEY:}
+  baidu:
+    api-key: ${BAIDU_API_KEY:}
+
+# RAG 配置
+rag:
+  # Milvus 向量数据库配置
+  milvus:
+    enabled: true  # 启用Milvus向量数据库
+    host: ${MILVUS_HOST:localhost}
+    port: ${MILVUS_PORT:19530}
+    collectionName: textile_knowledge
+  # 本地文档存储路径
+  local:
+    storage:
+      path: ./documents/rag_uploads
+  # Embedding API Key（用于文档向量化）
+  embedding:
+    api-key: ${DASHSCOPE_API_KEY:}
+  # Rerank 重排序配置（两阶段检索优化）
+  rerank:
+    enabled: false  # 暂时禁用，等待修复模型名称
+    model: bge-reranker-v2-m3  # Rerank 模型：bge-reranker-v2-m3（正确名称）
+    threshold: 0.7  # Rerank 分数阈值（0-1，越高越严格）
+    # 检索策略配置
+    vector:
+      recall-topk: 20  # 向量召回候选集大小（供 Rerank 精排）
+      min-score: 0.5  # 向量检索最低相似度阈值
+    rerank:
+      final-topk: 5  # Rerank 精排后返回的最终结果数
+  # 混合检索配置
+  hybrid:
+    enabled: true  # 是否启用混合检索
+    vector-weight: 0.6  # 向量检索权重
+    keyword-weight: 0.4  # 关键词检索权重
+    rrf-k: 60  # RRF 融合参数
+  # 查询重写配置
+  query-rewrite:
+    enabled: true  # 是否启用查询重写
+    synonym-expansion: true  # 同义词扩展
+    intent-enhancement: true  # 意图增强
+  # 语义缓存配置
+  cache:
+    enabled: true  # 是否启用语义缓存
+    similarity-threshold: 0.95  # 语义相似度阈值
+    ttl-seconds: 3600  # 缓存过期时间（秒）
+    max-size: 1000  # 最大缓存数量
+  # OCR 配置（用于处理扫描件PDF）
+  ocr:
+    enabled: true  # 是否启用 OCR 功能
+    auto-fallback: true  # Tika 解析失败时自动回退到 OCR
+    language: chi_sim+eng  # OCR 识别语言：中文简体+英文
+    data-path: ./tessdata  # Tesseract 数据文件路径
+    dpi: 300  # PDF 转图片的 DPI（越高越清晰，但速度越慢）
+
+# DashScope API 配置（用于 Embedding 和 Rerank）
+dashscope:
+  api-key: ${DASHSCOPE_API_KEY:}
+
+# 智能体配置
+agent:
+  # 当前激活的智能体类型（可选值：papa, requirements）
+  # 修改此值即可切换智能体角色，无需改代码
+  active-type: papa
+
+  # 各智能体的提示词模板路径
+  templates:
+    papa: papa-prompt-template.txt              # 纺织行业领域顾问
+    requirements: requirements-engineering-prompt-template.txt  # 纺织设计需求与规范专家

@@ -1,0 +1,56 @@
+# ---------- 构建产物 ----------
+/target/
+*.jar.original
+papa-ui/dist/
+
+# ---------- 本地私有配置（真实密钥 / 密码，禁止提交）----------
+application-local.yml
+/config/application-local.yml
+src/main/resources/application-local.yml
+
+# ---------- 依赖 ----------
+node_modules/
+papa-ui/node_modules/
+
+# ---------- OCR 语言包（体积大，按需下载，见 docs/OCR_SETUP.md）----------
+tessdata/
+
+# ---------- 日志 ----------
+*.log
+backend_run.log
+backend.log
+backend.err
+package.log
+
+# ---------- 运行时上传的 RAG 文档（保留一份示例语料）----------
+documents/rag_uploads/*
+!documents/rag_uploads/纺织行业基础知识.txt
+
+# ---------- IDE / 工具 ----------
+.idea/
+.codebuddy/
+.cursor/
+.vscode/
+
+# ---------- OS / 杂项 ----------
+.DS_Store
+Thumbs.db
+*.tmp
+
+# ---------- 软著申报材料（仅本地保留，不入开源仓库）----------
+核心源代码.md
+软件著作权操作手册.md
+
+# ---------- 一次性本地调试脚本（仅本地保留）----------
+tmp_fix.ps1
+check_captcha.ps1
+wait_captcha.ps1
+find_mysql.ps1
+mysql_diag.ps1
+mysql_diag2.ps1
+run_sql.ps1
+run_sql_final.ps1
+check_files.ps1
+cleanup.ps1
+package_app.ps1
+ver.sql

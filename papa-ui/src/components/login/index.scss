@@ -1,0 +1,225 @@
+.login-container {
+  display: flex;
+  align-items: center;
+  min-height: 100vh;
+  background: url('/主页.jpg') center center fixed no-repeat;
+  background-size: cover;
+  position: relative;
+  overflow: hidden;
+  padding: 24px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    pointer-events: none;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    width: 640px;
+    height: 640px;
+    top: -220px;
+    right: -220px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 70%);
+    pointer-events: none;
+  }
+
+  .login-row {
+    width: 100%;
+    position: relative;
+    z-index: 2;
+    align-items: center;
+  }
+
+  .brand-panel {
+    max-width: 620px;
+    margin: 0 auto;
+    color: #f2f6ff;
+    text-shadow: 0 4px 18px rgba(8, 15, 38, 0.45);
+  }
+
+  .brand-tag {
+    display: inline-block;
+    margin-bottom: 16px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: 14px;
+    letter-spacing: 1px;
+    background: rgba(255, 255, 255, 0.16);
+    border: 1px solid rgba(255, 255, 255, 0.32);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .brand-title {
+    margin: 0 0 14px;
+    font-size: 46px;
+    font-weight: 700;
+    line-height: 1.18;
+  }
+
+  .brand-desc {
+    margin: 0;
+    max-width: 560px;
+    font-size: 17px;
+    line-height: 1.8;
+    color: rgba(242, 246, 255, 0.88);
+  }
+
+  .login-form {
+    position: relative;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 40px 32px;
+    border-radius: 12px;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  }
+
+  .form-header {
+    margin-bottom: 24px;
+    text-align: center;
+
+    .title {
+      margin-bottom: 8px;
+      font-size: 42px;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      line-height: 1.1;
+      color: #1a1a1a;
+    }
+
+    .title-tips {
+      font-size: 16px;
+      color: #666;
+      letter-spacing: 0.3px;
+    }
+  }
+
+  .form-footer {
+    margin-top: 4px;
+    text-align: center;
+    font-size: 13px;
+    color: #999;
+  }
+
+  .captcha-row {
+    width: 100%;
+
+    .el-col {
+      height: 46px;
+    }
+  }
+
+  .login-btn {
+    width: 100%;
+    height: 46px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    background: #1a1a1a;
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: #333;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    &:active {
+      transform: translateY(0);
+      background: #000;
+    }
+  }
+
+  .pointer {
+    cursor: pointer;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .captcha-image {
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    border: 1px solid rgba(195, 203, 221, 0.8);
+  }
+
+  :deep(.el-form) {
+    .el-form-item {
+      margin: 14px 0 18px;
+
+      &__content {
+        min-height: 46px;
+      }
+
+      &__error {
+        left: 12px;
+      }
+    }
+
+    .el-input {
+      .el-input__wrapper {
+        border-radius: 8px;
+        box-shadow: none;
+        padding: 0 12px;
+        border: 1px solid #ddd;
+        background: #fafafa;
+        transition: all 0.2s ease;
+
+        &:hover {
+          border-color: #999;
+          background: #fff;
+        }
+      }
+
+      &.is-focus .el-input__wrapper {
+        border-color: #1a1a1a;
+        background: #fff;
+        box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.08);
+      }
+
+      input {
+        height: 46px;
+        font-size: 14px;
+        color: #1a1a1a;
+
+        &::placeholder {
+          color: #aaa;
+        }
+      }
+
+      .el-input__prefix {
+        color: #999;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .login-container {
+    padding: 16px;
+
+    .brand-panel {
+      display: none;
+    }
+
+    .login-form {
+      max-width: 100%;
+      padding: 24px 20px;
+      border-radius: 18px;
+    }
+
+    .form-header .title {
+      font-size: 34px;
+    }
+  }
+}
